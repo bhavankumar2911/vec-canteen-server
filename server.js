@@ -1,7 +1,16 @@
-const app = require("express")();
+if (!process.env.NODE_ENV || process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const dbInstance = require("./db/instance");
 const adminRouter = require("./routes/admin");
+const menuRouter = require("./routes/menu");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const auth = require("./middlewares/auth");
+
+const app = express();
 
 (async () => {
   try {
@@ -22,10 +31,20 @@ const adminRouter = require("./routes/admin");
 })();
 
 // middlewares
+app.use(cookieParser());
 app.use(express.json());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+  })
+);
 
 // api routes
 app.use("/admin", adminRouter);
+app.use("/menu", auth, menuRouter);
+// app.use("/menu", menuRouter);
 
 const PORT = 9000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}...`));

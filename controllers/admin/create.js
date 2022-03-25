@@ -5,6 +5,12 @@ const validator = require("validator");
 module.exports = async (req, res) => {
   const { username, password } = req.body;
 
+  // checking for empty inputs
+  if (!username || !password)
+    return res
+      .status(422)
+      .json({ success: false, message: "Enter all fields" });
+
   //   validate username
   if (!validator.isAlphanumeric(username))
     return res.status(422).json({

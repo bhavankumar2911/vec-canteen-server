@@ -1,9 +1,16 @@
 const Admin = require("../../models/admin");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 module.exports = async (req, res) => {
   const { username, password } = req.body;
+
+  // checking for empty inputs
+  if (!username || !password)
+    return res
+      .status(422)
+      .json({ success: false, message: "Enter all fields" });
 
   //   validate username
   if (!validator.isAlphanumeric(username))
@@ -13,6 +20,7 @@ module.exports = async (req, res) => {
     });
 
   try {
+    // checking if user exits
     const admin = await Admin.findOne({ where: { username } });
 
     if (!admin)
@@ -20,14 +28,19 @@ module.exports = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Admin doesn't exist" });
 
-    console.log(admin);
-
+    // comparing password
     if (!bcrypt.compareSync(password, admin.password))
       return res
         .status(422)
         .json({ success: false, message: "Wrong password" });
 
-    return res.send("logged in");
+    // signing jwt
+    const token = jwt.sign({ username }, process.env.JWT_SECRET);
+
+    res.cookie("token", token, { httpOnly: true });
+    return res
+      .status(200)
+      .json({ success: true, message: "Logged in successfully" });
   } catch (error) {
     console.log("Cannot login admin: ", error);
     return res
