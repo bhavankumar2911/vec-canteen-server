@@ -6,6 +6,7 @@ const express = require("express");
 const dbInstance = require("./db/instance");
 const adminRouter = require("./routes/admin");
 const menuRouter = require("./routes/menu");
+const userRouter = require("./routes/user");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const auth = require("./middlewares/auth");
@@ -44,7 +45,7 @@ app.use(
 // api routes
 app.use("/admin", adminRouter);
 app.use("/menu", auth, menuRouter);
-// app.use("/menu", menuRouter);
+app.use("/user", userRouter);
 
 const PORT = 9000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}...`));

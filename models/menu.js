@@ -1,6 +1,6 @@
 const dbInstance = require("../db/instance");
 const { DataTypes } = require("sequelize");
-const { STRING, INTEGER, NUMBER, BOOLEAN } = DataTypes;
+const { STRING, INTEGER, FLOAT, BOOLEAN } = DataTypes;
 
 module.exports = dbInstance.define(
   "menu",
@@ -16,7 +16,7 @@ module.exports = dbInstance.define(
       allowNull: false,
     },
     price: {
-      type: NUMBER,
+      type: FLOAT,
       allowNull: false,
     },
     isAvailable: {

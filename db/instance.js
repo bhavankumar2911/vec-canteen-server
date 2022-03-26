@@ -5,7 +5,7 @@ const instance = new Sequelize({
   username: "root",
   password: "",
   database: "vec-canteen",
-  dialect: "mysql",
+  dialect: "mariadb",
 });
 
 module.exports = instance;
