@@ -1,6 +1,6 @@
 const dbInstance = require("../db/instance");
 const { DataTypes } = require("sequelize");
-const { STRING, INTEGER, TEXT } = DataTypes;
+const { STRING, INTEGER, BIGINT, TEXT } = DataTypes;
 
 module.exports = dbInstance.define("User", {
   id: {
@@ -14,7 +14,7 @@ module.exports = dbInstance.define("User", {
     allowNull: false,
   },
   registerNumber: {
-    type: INTEGER,
+    type: BIGINT,
     allowNull: false,
     unique: true,
   },

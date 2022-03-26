@@ -1,6 +1,7 @@
 const User = require("../../models/user");
 const { isInt, trim, isAlphanumeric } = require("validator");
 const bcryptjs = require("bcryptjs");
+const checkExistingUser = require("../../helpers/user/isExisting");
 
 module.exports = async (req, res) => {
   const {
@@ -50,10 +51,22 @@ module.exports = async (req, res) => {
       message: "Passwords didn't match",
     });
 
+  const { existing, message } = await checkExistingUser(
+    registerNumber,
+    username
+  );
+
+  if (existing)
+    return res.status(422).json({
+      success: false,
+      message,
+    });
+
   // hashing password
   const passwordHash = bcryptjs.hashSync(password2, bcryptjs.genSaltSync(10));
 
   try {
+    console.log("before saving", registerNumber);
     const user = await User.create({
       username: trim(username),
       name: trim(name),
