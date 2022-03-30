@@ -9,7 +9,6 @@ const menuRouter = require("./routes/menu");
 const userRouter = require("./routes/user");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const auth = require("./middlewares/auth");
 
 const app = express();
 
@@ -44,7 +43,7 @@ app.use(
 
 // api routes
 app.use("/admin", adminRouter);
-app.use("/menu", auth, menuRouter);
+app.use("/menu", menuRouter);
 app.use("/user", userRouter);
 
 const PORT = 9000;

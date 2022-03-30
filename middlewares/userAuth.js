@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.cookies["user-token"];
 
   if (!token)
     return res
@@ -10,6 +10,8 @@ module.exports = (req, res, next) => {
 
   try {
     const decrypted = jwt.verify(token, process.env.USER_JWT_SECRET);
+
+    req.user = decrypted;
 
     if (req.path == "/user-auth")
       return res

@@ -4,7 +4,10 @@ module.exports = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const food = await Menu.findOne({ where: { id } });
+    const food = await Menu.findOne({
+      where: { id },
+      attributes: ["id", "foodName", "isAvailable", "price"],
+    });
 
     if (!food)
       res.status(404).json({
