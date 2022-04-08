@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
   try {
     const decrypted = jwt.verify(token, process.env.USER_JWT_SECRET);
 
-    req.user = decrypted;
+    req.user = { ...decrypted };
 
     if (req.path == "/user-auth")
       return res

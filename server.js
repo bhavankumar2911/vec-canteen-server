@@ -7,6 +7,7 @@ const dbInstance = require("./db/instance");
 const adminRouter = require("./routes/admin");
 const menuRouter = require("./routes/menu");
 const userRouter = require("./routes/user");
+const orderRouter = require("./routes/order");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
@@ -23,7 +24,7 @@ const app = express();
 
 // (async () => {
 //   try {
-//     await dbInstance.sync({ alter: true });
+//     await dbInstance.sync({ alter: true, force: false });
 //     console.log("All models synchronized...");
 //   } catch (error) {
 //     console.log("Cannot synchronize models: ", error);
@@ -45,6 +46,7 @@ app.use(
 app.use("/admin", adminRouter);
 app.use("/menu", menuRouter);
 app.use("/user", userRouter);
+app.use("/order", orderRouter);
 
 const PORT = 9000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}...`));

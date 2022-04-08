@@ -35,7 +35,10 @@ module.exports = async (req, res) => {
         .json({ success: false, message: "Wrong password" });
 
     // signing jwt
-    const token = jwt.sign({ username }, process.env.USER_JWT_SECRET);
+    const token = jwt.sign(
+      { username, id: user.id },
+      process.env.USER_JWT_SECRET
+    );
 
     res.cookie("user-token", token, { httpOnly: true });
 
