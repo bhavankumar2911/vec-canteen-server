@@ -1,51 +1,65 @@
 const { nanoid } = require("nanoid");
 const Order = require("../../models/order");
+const Menu = require("../../models/menu");
+const { Op } = require("sequelize");
 const OrderDetail = require("../../models/orderDetail");
+const validateCart = require("../../helpers/order/validateCart");
+const {
+  validatePaymentVerification,
+} = require("razorpay/dist/utils/razorpay-utils");
 
 module.exports = async (req, res) => {
-  const { cart } = req.body;
+  const { cart, razorpayOrderId, razorpayPaymentId, razorpaySignature } =
+    req.body;
   const { id } = req.user;
 
-  //   checking if the cart is an array with atleast 1 product
-  if (typeof cart !== "object" || cart.length == 0)
-    return res.status(422).json({
-      success: false,
-      message: "Please select products to place an order",
-    });
+  const { isValid, message } = validateCart(cart);
+  if (!isValid) return res.status(422).json({ success: false, message });
 
-  // checking if cart item contains all the properties
-  let isValid = true;
+  // array of food ids in cart
+  const foodIdsInCart = cart.map((item) => item.id);
 
-  cart.forEach((cartItem) => {
-    if (
-      !cartItem.id ||
-      !cartItem.foodName ||
-      !cartItem.isAvailable ||
-      !cartItem.amount ||
-      !cartItem.price ||
-      !cartItem.quantity
-    )
-      isValid = false;
-  });
+  let totalAmountToBePaid = 0;
 
-  if (!isValid)
-    return res.status(422).json({
-      success: false,
-      message: "Invalid request. Cannot confirm order",
-    });
-
-  // calculating the cart net total
-  let total = 0;
-
-  cart.forEach((cartItem) => (total += cartItem.amount));
-
-  // creating an order
   try {
+    //   fetching the food from db there are also in cart
+    const menu = await Menu.findAll({
+      where: {
+        id: {
+          [Op.or]: [...foodIdsInCart],
+        },
+      },
+    });
+
+    // updating the total amount to be paid by the user
+    menu.forEach((menuItem) => {
+      cart.forEach((cartItem) => {
+        if (cartItem.id == menuItem.id)
+          totalAmountToBePaid += cartItem.quantity * menuItem.price;
+      });
+    });
+
+    // verifying the rp signature
+    if (
+      !validatePaymentVerification(
+        { order_id: razorpayOrderId, payment_id: razorpayPaymentId },
+        razorpaySignature,
+        process.env.RP_TEST_KEY_SECRET
+      )
+    )
+      return res.status(400).json({
+        success: false,
+        message: "Payment verification failed",
+      });
+
     // storing an order in order table
     const order = await Order.create({
-      amount: total,
+      amount: totalAmountToBePaid,
       userId: id,
       id: nanoid(),
+      razorpayOrderId,
+      razorpayPaymentId,
+      razorpaySignature,
     });
 
     // storing the order details in details table
@@ -79,4 +93,10 @@ module.exports = async (req, res) => {
       message: "Cannot process your order. Internal server error",
     });
   }
+
+  cart.forEach((cartItem) => (total += cartItem.amount));
+
+  // creating an order
+  try {
+  } catch (error) {}
 };

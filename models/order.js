@@ -1,6 +1,6 @@
 const dbInstance = require("../db/instance");
 const { DataTypes } = require("sequelize");
-const { TEXT, FLOAT, BOOLEAN } = DataTypes;
+const { TEXT, FLOAT, BOOLEAN, STRING } = DataTypes;
 const User = require("./user");
 
 const Order = dbInstance.define("Order", {
@@ -17,6 +17,18 @@ const Order = dbInstance.define("Order", {
     type: BOOLEAN,
     allowNull: false,
     defaultValue: false,
+  },
+  razorpayOrderId: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpayPaymentId: {
+    type: STRING,
+    allowNull: false,
+  },
+  razorpaySignature: {
+    type: TEXT,
+    allowNull: false,
   },
 });
 

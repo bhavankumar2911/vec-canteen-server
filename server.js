@@ -8,6 +8,7 @@ const adminRouter = require("./routes/admin");
 const menuRouter = require("./routes/menu");
 const userRouter = require("./routes/user");
 const orderRouter = require("./routes/order");
+const paymentRouter = require("./routes/payment");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
@@ -47,6 +48,7 @@ app.use("/admin", adminRouter);
 app.use("/menu", menuRouter);
 app.use("/user", userRouter);
 app.use("/order", orderRouter);
+app.use("/payment", paymentRouter);
 
 const PORT = 9000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}...`));
