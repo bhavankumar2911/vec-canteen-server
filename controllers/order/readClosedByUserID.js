@@ -3,15 +3,13 @@ const User = require("../../models/user");
 const OrderDetail = require("../../models/orderDetail");
 
 module.exports = async (req, res) => {
-  const { path } = req;
-  let whereCondition = {};
-
-  if (path == "/pending") whereCondition.isClosed = false;
-  else if (path == "/closed") whereCondition.isClosed = true;
+  const { userid } = req.params;
 
   try {
     const orders = await Order.findAll({
-      where: { ...whereCondition },
+      where: {
+        userId: userid,
+      },
       include: User,
     });
 
