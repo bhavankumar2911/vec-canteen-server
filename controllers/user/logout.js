@@ -1,5 +1,5 @@
 module.exports = (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("user-token");
 
   return res
     .status(200)

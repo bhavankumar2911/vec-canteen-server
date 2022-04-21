@@ -3,9 +3,18 @@ const Razorpay = require("razorpay");
 const { nanoid } = require("nanoid");
 const validateCart = require("../../helpers/order/validateCart");
 const Menu = require("../../models/menu");
+const listify = require("listify");
+const moment = require("moment");
 
 module.exports = async (req, res) => {
   const { cart } = req.body;
+
+  // restricting orders after 10 am and before 6 pm
+  if (10 <= moment().hour() && moment().hour() <= 18)
+    return res.status(422).json({
+      success: false,
+      message: "Please order before 10 am or after 6 pm for the next day!",
+    });
 
   const { isValid, message } = validateCart(cart);
   if (!isValid) return res.status(422).json({ success: false, message });
@@ -24,6 +33,23 @@ module.exports = async (req, res) => {
         },
       },
     });
+
+    // checking if the foods in the cart are available
+    const unavailableFoods = [];
+
+    menu.forEach((foodItem) => {
+      if (!foodItem.isAvailable) unavailableFoods.push(foodItem.foodName);
+    });
+
+    if (unavailableFoods.length > 0) {
+      console.log(unavailableFoods);
+      return res.status(404).json({
+        success: false,
+        message: `Sorry for the inconvenience, ${listify(unavailableFoods)} ${
+          unavailableFoods.length > 1 ? "are" : "is"
+        } unavailable.`,
+      });
+    }
 
     // updating the total amount to be paid by the user
     menu.forEach((menuItem) => {

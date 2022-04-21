@@ -11,6 +11,7 @@ const orderRouter = require("./routes/order");
 const paymentRouter = require("./routes/payment");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const userAuth = require("./middlewares/userAuth");
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use("/menu", menuRouter);
 app.use("/user", userRouter);
 app.use("/order", orderRouter);
 app.use("/payment", paymentRouter);
+app.get("/user-auth", userAuth);
 
 const PORT = 9000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}...`));

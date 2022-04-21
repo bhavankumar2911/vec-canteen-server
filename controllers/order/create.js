@@ -1,4 +1,3 @@
-const { nanoid } = require("nanoid");
 const Order = require("../../models/order");
 const Menu = require("../../models/menu");
 const { Op } = require("sequelize");
@@ -56,7 +55,7 @@ module.exports = async (req, res) => {
     const order = await Order.create({
       amount: totalAmountToBePaid,
       userId: id,
-      id: nanoid(),
+      id: `${req.user.username}_${Date.now().toString()}`,
       razorpayOrderId,
       razorpayPaymentId,
       razorpaySignature,
@@ -93,10 +92,4 @@ module.exports = async (req, res) => {
       message: "Cannot process your order. Internal server error",
     });
   }
-
-  cart.forEach((cartItem) => (total += cartItem.amount));
-
-  // creating an order
-  try {
-  } catch (error) {}
 };

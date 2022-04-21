@@ -2,7 +2,6 @@ const Menu = require("../../models/menu");
 const { isInt, isFloat } = require("validator");
 
 module.exports = async (req, res) => {
-  console.log("got requiest");
   const { id } = req.params;
   const { foodName, price } = req.body;
 
@@ -11,7 +10,7 @@ module.exports = async (req, res) => {
       .status(422)
       .json({ success: false, message: "Enter all fields" });
 
-  if (!isInt(price) || !isFloat(price))
+  if (!isInt(price.toString()) || !isFloat(price.toString()))
     return res
       .status(422)
       .json({ success: false, message: "Price should be in number" });
