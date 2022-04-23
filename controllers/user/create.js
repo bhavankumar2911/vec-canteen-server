@@ -1,11 +1,19 @@
 const User = require("../../models/user");
-const { isInt, trim, isAlphanumeric } = require("validator");
+const {
+  isInt,
+  trim,
+  isAlphanumeric,
+  isEmail,
+  isMobilePhone,
+} = require("validator");
 const bcryptjs = require("bcryptjs");
 const checkExistingUser = require("../../helpers/user/isExisting");
 
 module.exports = async (req, res) => {
   const {
     name,
+    email,
+    phone,
     registerNumber,
     department,
     username,
@@ -16,6 +24,8 @@ module.exports = async (req, res) => {
 
   if (
     !name ||
+    !email ||
+    !phone ||
     !registerNumber ||
     !department ||
     !username ||
@@ -27,6 +37,16 @@ module.exports = async (req, res) => {
       .status(422)
       .json({ success: false, message: "Enter all fields" });
   }
+
+  if (!isEmail(email))
+    return res
+      .status(422)
+      .json({ success: false, message: "Enter a valid email" });
+
+  if (!isMobilePhone(phone, "en-IN", { strict: true }))
+    return res
+      .status(422)
+      .json({ success: false, message: "Enter a valid mobile number" });
 
   if (!isInt(registerNumber) || registerNumber.length != 12)
     return res
@@ -66,7 +86,6 @@ module.exports = async (req, res) => {
   const passwordHash = bcryptjs.hashSync(password2, bcryptjs.genSaltSync(10));
 
   try {
-    console.log("before saving", registerNumber);
     const user = await User.create({
       username: trim(username),
       name: trim(name),
@@ -74,6 +93,8 @@ module.exports = async (req, res) => {
       registerNumber,
       department,
       graduationYear,
+      phone,
+      email,
     });
 
     return res

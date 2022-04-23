@@ -13,6 +13,14 @@ module.exports = dbInstance.define("User", {
     type: STRING,
     allowNull: false,
   },
+  email: {
+    type: STRING,
+    allowNull: false,
+  },
+  phone: {
+    type: STRING,
+    allowNull: false,
+  },
   registerNumber: {
     type: BIGINT,
     allowNull: false,

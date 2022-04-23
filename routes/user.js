@@ -10,6 +10,8 @@ const logout = require("../controllers/user/logout");
 
 router.post("/", create);
 
+router.get("/", userAuth, readOne);
+
 router.get("/", readAll);
 
 router.patch("/", userAuth, update);
@@ -19,7 +21,5 @@ router.delete("/", userAuth, deleteUser);
 router.post("/login", login);
 
 router.get("/logout", userAuth, logout);
-
-router.get("/:username", readOne);
 
 module.exports = router;

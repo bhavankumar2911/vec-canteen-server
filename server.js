@@ -12,6 +12,7 @@ const paymentRouter = require("./routes/payment");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const userAuth = require("./middlewares/userAuth");
+const sendPasswordResetMail = require("./controllers/passwordReset/sendResetMail");
 
 const app = express();
 
@@ -26,7 +27,7 @@ const app = express();
 
 // (async () => {
 //   try {
-//     await dbInstance.sync({ alter: true, force: false });
+//     await dbInstance.sync({ alter: true, force: true });
 //     console.log("All models synchronized...");
 //   } catch (error) {
 //     console.log("Cannot synchronize models: ", error);
@@ -51,6 +52,7 @@ app.use("/user", userRouter);
 app.use("/order", orderRouter);
 app.use("/payment", paymentRouter);
 app.get("/user-auth", userAuth);
+app.post("/generate-password-reset-id", sendPasswordResetMail);
 
 const PORT = 9000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}...`));

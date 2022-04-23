@@ -1,11 +1,11 @@
 const dbInstance = require("../db/instance");
 const { DataTypes } = require("sequelize");
-const { TEXT, FLOAT, BOOLEAN, STRING } = DataTypes;
+const { FLOAT, BOOLEAN, STRING, TEXT } = DataTypes;
 const User = require("./user");
 
 const Order = dbInstance.define("Order", {
   id: {
-    type: TEXT,
+    type: STRING,
     primaryKey: true,
     allowNull: false,
   },
