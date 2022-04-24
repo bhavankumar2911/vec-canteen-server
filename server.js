@@ -13,6 +13,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const userAuth = require("./middlewares/userAuth");
 const sendPasswordResetMail = require("./controllers/passwordReset/sendResetMail");
+const resetPassword = require("./controllers/passwordReset/resetPassword");
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use("/order", orderRouter);
 app.use("/payment", paymentRouter);
 app.get("/user-auth", userAuth);
 app.post("/generate-password-reset-id", sendPasswordResetMail);
+app.patch("/reset-password/:id", resetPassword);
 
 const PORT = 9000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}...`));
