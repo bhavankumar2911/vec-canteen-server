@@ -21,7 +21,10 @@ module.exports = async (req, res) => {
 
   try {
     // checking if user exits
-    const user = await User.findOne({ where: { username } });
+    const user = await User.findOne({
+      where: { username },
+      attributes: ["password", "email", "name", "phone", "id"],
+    });
 
     if (!user)
       return res
@@ -42,9 +45,13 @@ module.exports = async (req, res) => {
 
     res.cookie("user-token", token, { httpOnly: true });
 
-    return res
-      .status(200)
-      .json({ success: true, message: "Logged in successfully" });
+    const { email, name, phone } = user;
+
+    return res.status(200).json({
+      success: true,
+      message: "Logged in successfully",
+      user: { email, name, phone },
+    });
   } catch (error) {
     console.log("Cannot login user: ", error);
     return res.status(500).json({
