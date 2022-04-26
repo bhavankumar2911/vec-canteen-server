@@ -1,7 +1,6 @@
 const dbInstance = require("../db/instance");
 const { DataTypes } = require("sequelize");
 const { STRING } = DataTypes;
-const User = require("./user");
 
 const ForgotPassword = dbInstance.define(
   "forgot_password",
