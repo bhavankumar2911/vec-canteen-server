@@ -6,7 +6,7 @@ const ForgotPassword = dbInstance.define(
   "forgot_password",
   {
     resetID: {
-      type: STRING(1234),
+      type: STRING,
       allowNull: false,
       unique: true,
     },

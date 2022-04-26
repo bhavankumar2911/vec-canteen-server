@@ -27,14 +27,14 @@ const app = express();
   }
 })();
 
-// (async () => {
-//   try {
-//     await dbInstance.sync({ alter: true, force: true });
-//     console.log("All models synchronized...");
-//   } catch (error) {
-//     console.log("Cannot synchronize models: ", error);
-//   }
-// })();
+(async () => {
+  try {
+    await dbInstance.sync({ alter: true, force: true });
+    console.log("All models synchronized...");
+  } catch (error) {
+    console.log("Cannot synchronize models: ", error);
+  }
+})();
 
 // middlewares
 app.use(cookieParser());
