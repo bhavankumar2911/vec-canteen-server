@@ -1,13 +1,13 @@
 const dbInstance = require("../db/instance");
 const { DataTypes } = require("sequelize");
-const { TEXT, STRING } = DataTypes;
+const { STRING } = DataTypes;
 const User = require("./user");
 
 const ForgotPassword = dbInstance.define(
   "forgot_password",
   {
     resetID: {
-      type: TEXT,
+      type: STRING(1234),
       allowNull: false,
       unique: true,
     },
