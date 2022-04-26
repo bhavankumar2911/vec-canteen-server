@@ -14,6 +14,7 @@ const cors = require("cors");
 const userAuth = require("./middlewares/userAuth");
 const sendPasswordResetMail = require("./controllers/passwordReset/sendResetMail");
 const resetPassword = require("./controllers/passwordReset/resetPassword");
+const path = require("path");
 
 const app = express();
 
@@ -37,6 +38,7 @@ const app = express();
 
 // middlewares
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "..", "client", "out")));
 app.use(express.json());
 app.use(
   cors({
@@ -45,6 +47,91 @@ app.use(
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
   })
 );
+
+// view routes only for production
+
+// landing page
+app.get("/", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "index.html")
+  );
+});
+
+// user pages
+
+app.get("/user/cart", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "user", "cart.html")
+  );
+});
+
+app.get("/user/login", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "user", "login.html")
+  );
+});
+
+app.get("/user/orders", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "user", "orders.html")
+  );
+});
+
+app.get("/user/profile", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "user", "profile.html")
+  );
+});
+
+app.get("/user/reset-password", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "user", "reset-password.html")
+  );
+});
+
+app.get("/user/signup", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "user", "signup.html")
+  );
+});
+
+app.get("/user/update", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "user", "update.html")
+  );
+});
+
+// admin pages
+
+app.get("/admin/orders", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "admin", "orders.html")
+  );
+});
+
+app.get("/admin/menu", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "admin", "menu.html")
+  );
+});
+
+app.get("/admin/dashboard", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "admin", "dashboard.html")
+  );
+});
+
+app.get("/admin/signup", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "admin", "signup.html")
+  );
+});
+
+app.get("/admin/login", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname, "..", "client", "out", "admin", "login.html")
+  );
+});
 
 // api routes
 app.use("/admin", adminRouter);

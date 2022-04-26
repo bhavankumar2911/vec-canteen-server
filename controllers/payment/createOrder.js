@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
   const { cart } = req.body;
 
   // restricting orders after 10 am and before 6 pm
-  if (10 <= moment().hour() && moment().hour() <= 18)
+  if (10 <= moment().hour() && moment().hour() <= 17)
     return res.status(422).json({
       success: false,
       message: "Please order before 10 am or after 6 pm for the next day!",
