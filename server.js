@@ -42,7 +42,7 @@ app.use(express.static(path.join(__dirname, "..", "client", "out")));
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [process.env.CLIENT_HOST],
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
   })
